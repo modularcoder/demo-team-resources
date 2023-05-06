@@ -1,29 +1,12 @@
-import { type NextPage, type GetServerSidePropsContext } from "next";
+import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "~/_services/apiService";
-import { getServerAuthSession } from "~/_services/authService"
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(context);
-
-  // If the user is already logged in, redirect.
-  // Note: Make sure not to redirect to the same page
-  // To avoid an infinite loop!
-  if (session) {
-    return { redirect: { destination: "/app" } };
-  }
-
-  return {
-    props: {},
-  }
-}
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const { data: sessionData } = useSession();
 
   return (
     <>
@@ -41,6 +24,7 @@ const Home: NextPage = () => {
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
+            <AuthShowcase />
           </div>
         </div>
       </main>
